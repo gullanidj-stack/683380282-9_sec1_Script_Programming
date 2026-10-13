@@ -1,58 +1,149 @@
-# Document Automation Agent (เวอร์ชันของฉัน)
 
-โปรแกรม Python ที่อ่านงานจากไฟล์ JSON แล้วทำเอกสารให้อัตโนมัติ:
-สร้างรายงาน Word จาก template, ใส่ลายน้ำ PDF, รวม PDF และดึงข้อความจาก Word/PDF
-พร้อมบันทึก audit log ทุกครั้งที่รัน
 
-## วิธีใช้
+# Week 11: Automating PDFs &amp; Word Documents
+
+This project demonstrates how to automate common tasks involving PDF and Word documents
+using Python. It leverages `PyPDF2` for PDF manipulation and `python-docx` for Word document
+creation and modification.
+
+## Key Concepts Demonstrated
+
+* **PDF Text Extraction**: Reading text content from PDF files.
+* **PDF Merging**: Combining multiple PDF files into a single document.
+* **Word Document Creation**: Programmatically generating new `.docx` files.
+* **Adding Content to Word**: Inserting headings, paragraphs, formatted text (bold, italic, font
+  size), and tables.
+* **Modular Design**: Separating PDF and Word processing logic into distinct modules
+  (`pdf_processor.py`, `word_processor.py`).
+* **Robustness**: Basic error handling for file operations and library interactions, with logging for
+  workflow visibility.
+
+## Setup &amp; How to Run
+
+1. **Clone the repository:**
 
 ```bash
-pip install -r requirements.txt
-python scripts/make_samples.py   # สร้าง template และ PDF ตัวอย่าง (ทำครั้งเดียว)
-python main.py                   # รันทุก task
-python main.py --only merge_pdfs apply_pdf_watermark   # รันเฉพาะบางประเภท
-python -m unittest discover tests -v                   # ทดสอบ
+git clone [https://github.com/YOUR_USERNAME/document-
+automator.git](https://github.com/YOUR_USERNAME/document-automator.git)
+cd document-automator
 ```
 
-## แก้ให้เป็นของตัวเอง (ทำที่ `configs/document_automation_config.json`)
+2. **Install Dependencies:**
+   It&#39;s highly recommended to use a virtual environment:
 
-- `global_data.AUTHOR_NAME` / `COMPANY_NAME`: ใส่ชื่อและหน่วยงานของคุณ
-- `global_data.REPORT_DATE`: ใส่ `"auto"` เพื่อใช้วันที่วันนี้ หรือกำหนดเอง
-- `data` และ `table_data` ในงานรายงาน: เปลี่ยนหัวข้อ/เนื้อหา/ตาราง หรือใช้ `"table_csv": "documents/data.csv"` แทน
-- ปิดงานชั่วคราวด้วย `"enabled": false`
-- ลายน้ำ: `mode` เป็น `center` หรือ `tiled`
-- แก้หน้าตา template: เปิด `templates/report_template.docx` ใน Word แล้วแก้ได้เลย
-  โดยเก็บ `{{ชื่อ_PLACEHOLDER}}` ไว้ (ตัวพิมพ์ใหญ่ ขีดล่าง และ `{{TABLE_PLACEHOLDER}}` คือตำแหน่งตาราง)
-
-## โครงสร้าง
-
-```
-main.py                  จุดเริ่มต้น (CLI)
-configs/                 ไฟล์ config
-src/config_parser.py     ตรวจ config + แปลง path
-src/document_agent.py    ตัวคุมงาน (registry ของ task)
-src/word_tasks.py        งาน Word
-src/pdf_tasks.py         งาน PDF
-src/utils.py             logging + audit log
-scripts/make_samples.py  สร้างไฟล์ตั้งต้น
-tests/                   unit tests
+```bash
+python -m venv venv
+source venv/bin/activate # On Windows: venv\Scripts\activate.bat
+pip install PyPDF2 python-docx
 ```
 
-## ต่างจากตัวอย่างต้นฉบับอย่างไร
+3. **Prepare Input Documents:**
 
-บั๊กที่แก้:
-- ค่าที่เติมใน Word เคยมี `{{ }}` ค้างอยู่ (เช่น `{{Monthly Performance Summary}}`) ตอนนี้แทนที่ได้ถูกต้อง
-- ตารางเคยไปต่อท้ายเอกสาร ตอนนี้แทรกตรงตำแหน่ง `{{TABLE_PLACEHOLDER}}`
-- ลายน้ำเคยใช้ขนาด A4 ตายตัว ตอนนี้ปรับตามขนาดของแต่ละหน้า และไม่สร้างไฟล์ชั่วคราว
-- `check_required_files` เคยอ้าง task ตามลำดับ index ทำให้พังถ้าสลับลำดับใน config
-- `requirements.txt` เคยว่างเปล่า / ใช้ PyPDF2 ที่เลิกพัฒนา เปลี่ยนเป็น `pypdf`
-- audit log เคยเก็บ path เต็มของเครื่อง ตอนนี้เก็บแบบ relative
+* Create a folder named `documents` in the root of your project: `mkdir documents`.
+* **`input_article.pdf`**: Place a sample PDF file with some text content in the `documents` folder. This
+  PDF&#39;s text will be extracted and inserted into the Word document.
+* **`dummy_doc1.pdf` &amp; `dummy_doc2.pdf`**: For the PDF merging example, create two very small,
+  simple PDF files (e.g., just one line of text) and place them in the `documents` folder.
+  **Example Content Idea for `input_article.pdf` (Save as PDF):**
 
-ที่ปรับปรุง:
-- เพิ่ม CLI (`--config`, `--only`), `enabled`, `table_csv`, ลายน้ำแบบ `tiled`
-- แยก task แบบ registry ไม่ใช้ if/elif ยาว และ task หนึ่งพังไม่ทำให้ตัวอื่นหยุด
-- ตรวจ config ครบทุกประเภท task และคืน exit code 1 เมื่อมี task ล้มเหลว
-- ดึงข้อความจาก Word ตามลำดับจริง (ย่อหน้ากับตารางสลับกันถูกที่)
+```
+Introduction to Automation
+Automation is the creation and application of technology to produce and deliver goods and services
+with minimal human intervention. The implementation of automation technologies, techniques, and
+processes improves the efficiency, reliability, and speed of many tasks that were previously performed
+manually. This leads to increased productivity, reduced costs, and improved quality.
+Benefits of Automation
+1. Increased Efficiency: Tasks are completed faster and with higher throughput.
+2. Cost Reduction: Lower labor costs and reduced waste.
+3. Improved Accuracy: Minimizes human error.
+4. Enhanced Safety: Dangerous tasks can be automated.
 
-ข้อจำกัด: ลายน้ำใช้ฟอนต์ Helvetica จึงรองรับเฉพาะตัวอักษรละติน
-ถ้าต้องการลายน้ำภาษาไทย ต้อง register ฟอนต์ TTF ไทยกับ reportlab เพิ่ม
+5. Greater Consistency: Uniform quality in output.
+Conclusion
+Automation is transforming industries globally. Embracing these technologies is crucial for future
+competitiveness.
+```
+
+4. **Run the script:**
+
+```bash
+python main.py
+```
+
+The script will:
+
+* Extract text from `input_article.pdf`.
+* Create `output_report.docx` in the `documents` folder, containing the extracted text, a custom
+  heading, and a summary table.
+* If `dummy_doc1.pdf` and `dummy_doc2.pdf` are present, it will merge them into `merged_output.pdf`.
+
+## Project Structure
+
+document-automator/
+├── src/
+│ ├── init.py # Python package marker
+│ ├── pdf_processor.py # Logic for PyPDF2 operations (extract, merge, split)
+│ ├── word_processor.py # Logic for python-docx operations (create, add content, format)
+│ └── utils.py # General utilities (logging, directory creation)
+├── documents/
+│ ├── input_article.pdf # Sample PDF for text extraction (YOU CREATE THIS)
+│ ├── dummy_doc1.pdf # Sample PDF for merging (YOU CREATE THIS)
+│ ├── dummy_doc2.pdf # Sample PDF for merging (YOU CREATE THIS)
+│ └── output_report.docx # Generated Word document
+│ └── merged_output.pdf # Generated merged PDF (if merge task runs)
+├── main.py # Application entry point to orchestrate tasks
+├── .gitignore # Files/folders to ignore in Git
+└── README.md # This project overview
+
+## Debugging Document Automation
+
+* **`FileNotFoundError`**: Ensure your input PDF files (`input_article.pdf`, `dummy_doc1.pdf`,
+  `dummy_doc2.pdf`) are correctly placed in the `documents` directory and their names match
+  exactly in `main.py`.
+* **`PyPDF2.errors.PdfReadError`**: This often means the PDF file is corrupted, encrypted with
+  an unknown password, or not a valid PDF. Ensure your input PDFs are standard and readable.
+* **Blank Word Document / Missing Content**:
+* Check if `pdf_processor.extract_text_from_pdf()` actually returned text. If it&#39;s `None` or
+  empty, the Word document will be empty. Some PDFs are image-based and don&#39;t contain
+  selectable text.
+* Verify that `add_paragraph`, `add_heading`, `add_table` calls are correctly made *before*
+  `save_document`.
+* **Formatting Issues in Word**: `python-docx` sometimes requires specific sequences for
+  complex formatting.
+* For runs within paragraphs, ensure you&#39;re accessing `paragraph.runs[0]` or iterating through
+  runs if you add text in parts.
+* Font sizes are in points (`Pt()`).
+* **Logging Output**: The `logging` module provides detailed messages in the console. Pay
+  attention to `ERROR` and `WARNING` messages to pinpoint issues.
+
+## Extension Ideas (Future Work)
+
+* **Template-Based Document Generation**: Create a Word template (`.docx`) with
+  placeholders (e.g., `{{name}}`, `{{date}}`) and use `python-docx` to find and replace these
+  placeholders with data from a source (e.g., Excel, CSV, database). This is powerful for
+  generating many similar documents.
+* **Advanced PDF Parsing**: For complex PDFs with varying layouts, consider libraries like
+  `pdfminer.six` or `PyMuPDF` (Fitz) which offer more control over text extraction and layout
+  analysis.
+* **PDF to Image/Image to PDF**: Convert PDF pages to images or assemble images into a
+  PDF.
+* **Document Conversions**: Explore libraries or external tools (like Pandoc) for converting
+  between Word, PDF, HTML, etc.
+* **Mail Merge Automation**: Combine spreadsheet data with a Word template to generate
+  personalized documents (e.g., letters, certificates).
+* **Web-to-PDF/Word**: Integrate with web scraping to extract data and then generate a
+  structured report in PDF or Word.
+* **Document Comparison**: Use Python to compare two versions of a document (textually).
+* **Document Search/Indexing**: Build a script to index text content from a directory of
+  documents for quick searching.
+
+---
+
+แหล่งที่มา
+
+1. https://github.com/3000alex/sistema_reportes2.0
+2. https://careerkarma.com/blog/automation/
+3. https://www.nitw.ac.in/siemens/facilities.html
+4. https://www.anhenterprise.com/
+5. https://github.com/MikeyBeez/RAGAgent
+6. https://automatetheboringstuff.com/2e/chapter15/
