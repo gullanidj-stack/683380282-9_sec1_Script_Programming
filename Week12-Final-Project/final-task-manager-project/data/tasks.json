@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "description": "Prepare final presentation",
+        "completed": false,
+        "tags": [
+            "school",
+            "urgent"
+        ],
+        "_type": "DueDateTask",
+        "due_date": "2026-12-01"
+    },
+    {
+        "id": 2,
+        "description": "Buy groceries",
+        "completed": false,
+        "tags": [
+            "home"
+        ],
+        "_type": "Task"
+    },
+    {
+        "id": 3,
+        "description": "Fix login bug",
+        "completed": false,
+        "tags": [
+            "work",
+            "urgent"
+        ],
+        "_type": "PriorityTask",
+        "priority": "High"
+    },
+    {
+        "id": 4,
+        "description": "Read Python docs",
+        "completed": true,
+        "tags": [
+            "school"
+        ],
+        "_type": "PriorityTask",
+        "priority": "Low"
+    },
+    {
+        "id": 5,
+        "description": "Submit assignment",
+        "completed": false,
+        "tags": [
+            "school"
+        ],
+        "_type": "DueDateTask",
+        "due_date": "2026-11-15"
+    },
+    {
+        "id": 6,
+        "description": "101",
+        "completed": false,
+        "tags": [
+            "101"
+        ],
+        "_type": "Task"
+    }
+]

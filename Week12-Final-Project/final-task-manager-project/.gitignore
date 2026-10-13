@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.ipynb_checkpoints/
+.vscode/
+
+# Environment
+.env
+venv/
+env/
+
+# Data files (uncomment to ignore your tasks)
+# data/tasks.json
