@@ -1,0 +1,56 @@
+{
+  "global_data": {
+    "REPORT_DATE": "auto",
+    "AUTHOR_NAME": "ชื่อ-นามสกุลของคุณ",
+    "COMPANY_NAME": "ชื่อองค์กรของคุณ"
+  },
+  "audit_dir": "documents/reports",
+  "tasks": [
+    {
+      "name": "สร้างรายงานสรุปผลประจำเดือน (Word)",
+      "type": "generate_word_report",
+      "template_path": "templates/report_template.docx",
+      "output_path": "documents/generated_report.docx",
+      "data": {
+        "REPORT_TITLE": "รายงานสรุปผลการดำเนินงานประจำเดือน",
+        "INTRODUCTION_TEXT": "รายงานฉบับนี้สร้างอัตโนมัติ เพื่อสรุปตัวชี้วัดสำคัญของการดำเนินงาน",
+        "MONTH_PERIOD": "ตุลาคม 2569"
+      },
+      "table_data": [
+        ["ตัวชี้วัด", "ค่า", "แนวโน้ม"],
+        ["รายได้จากการขาย", "120,000 บาท", "เพิ่มขึ้น 10%"],
+        ["ลูกค้าใหม่", "500 ราย", "ทรงตัว"],
+        ["อัตราความสำเร็จของโครงการ", "95%", "ดีเยี่ยม"]
+      ]
+    },
+    {
+      "name": "ใส่ลายน้ำ CONFIDENTIAL ลงใน PDF",
+      "type": "apply_pdf_watermark",
+      "input_pdf": "documents/source_document.pdf",
+      "output_pdf": "documents/watermarked_document.pdf",
+      "watermark_text": "CONFIDENTIAL",
+      "font_size": 70,
+      "color": [1, 0, 0, 0.15],
+      "angle": 45,
+      "mode": "center"
+    },
+    {
+      "name": "รวมเอกสารโครงการเป็นไฟล์เดียว",
+      "type": "merge_pdfs",
+      "input_pdfs": ["documents/dummy_doc1.pdf", "documents/dummy_doc2.pdf"],
+      "output_pdf": "documents/merged_docs.pdf"
+    },
+    {
+      "name": "ดึงข้อความจากรายงาน Word",
+      "type": "extract_word_text",
+      "input_docx": "documents/generated_report.docx",
+      "output_text_file": "documents/extracted_word_text.txt"
+    },
+    {
+      "name": "ดึงข้อความจาก PDF ต้นฉบับ",
+      "type": "extract_pdf_text",
+      "input_pdf": "documents/source_document.pdf",
+      "output_text_file": "documents/extracted_pdf_text.txt"
+    }
+  ]
+}

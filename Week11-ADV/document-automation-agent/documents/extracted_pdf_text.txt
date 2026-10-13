@@ -1,0 +1,10 @@
+--- Page 1 ---
+Source Document
+This is the source document used for watermarking and text extraction.
+Page one introduces the project goals and scope.
+Page 1 of 2
+
+--- Page 2 ---
+Source Document
+Page two lists the deliverables and the project timeline.
+Page 2 of 2
