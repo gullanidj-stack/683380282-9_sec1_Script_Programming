@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Editors / notebooks
+.ipynb_checkpoints/
+.vscode/
+
+# Environment
+.env
+
+# Generated files
+data/processed_sales_by_customer.csv
+data/sales_data.json
+data/updated_inventory.json
+reports/
